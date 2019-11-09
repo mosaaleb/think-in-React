@@ -1,20 +1,9 @@
 import React from 'react';
 import ReactDom from 'react-dom';
 
-class ProductCategoryRow extends React.Component {
-  render = () => {
-    const { product } = this.props;
-    return (
-      <tr>
-        <th colSpan='2' fontStyle='bold'>{product.category}</th>
-      </tr>
-    );
-  }
-}
-
 class ProductRow extends React.Component {
   render = () => {
-    const { product } =  this.props;
+    const { product } = this.props;
     return (
       <tr>
         <td>{product.name}</td>
@@ -23,8 +12,18 @@ class ProductRow extends React.Component {
     )
   }
 }
+class ProductCategoryRow extends React.Component {
+  render = () => {
+    const { product } = this.props;
+    return (
+      <tr>
+        <th colSpan='2'>{product.category}</th>
+      </tr>
+    );
+  }
+}
 
-class ProdutctTable extends React.Component {
+class ProductTable extends React.Component {
   render = () => {
     const { products } = this.props;
     let lastCategory = null;
@@ -57,7 +56,7 @@ class ProdutctTable extends React.Component {
 
 class SearchBar extends React.Component {
   render = () => {
-    return(
+    return (
       <form>
         <input type='text' placeholder='search'/>
         <p>
@@ -69,13 +68,39 @@ class SearchBar extends React.Component {
   }
 }
 
+class Clock extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { date: new Date() };
+  }
+
+  componentDidMount = () => {
+    this.timerID = setInterval(() => { this.tick() }, 1000);
+  }
+
+  componentWillMount = () => {
+    clearInterval(this.timerID);
+  }
+
+  tick() {
+    this.setState({
+      date: new Date()
+    })
+  }
+
+  render = () => {
+    return <h2>{this.state.date.toLocaleTimeString()}.</h2>
+  }
+}
+
 class FilterableProductTable extends React.Component {
   render = () => {
     const { products } = this.props;
     return (
       <>
+        <Clock />
         <SearchBar />
-        <ProdutctTable products={products}/>
+        <ProductTable products={products}/>
       </>
     );
   }
@@ -90,8 +115,6 @@ const PRODUCTS = [
   {category: 'Electronics', price: '$199.99', stocked: true, name: 'Nexus 7'}
 ];
 
-const attachable = document.getElementById('root')
-ReactDom.render(
-  <FilterableProductTable products={PRODUCTS} timeline="once"/>,
-  attachable
-);
+const attachable = document.getElementById('root');
+const app = <FilterableProductTable products={PRODUCTS} />
+ReactDom.render(app, attachable);
