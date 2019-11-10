@@ -61,13 +61,27 @@ class ProductTable extends React.Component {
 }
 
 class SearchBar extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleFilterTextChange = this.handleFilterTextChange.bind(this);
+    this.handleInStockChange = this.handleInStockChange.bind(this);
+  }
+
+  handleFilterTextChange(e) {
+    this.props.onFilterTextChange(e.target.value);
+  }
+
+  handleInStockChange(e) {
+    this.props.onInStockChange(e.target.checked);
+  }
+
   render = () => {
     const { filterText, inStockOnly } = this.props;
     return (
       <form>
-        <input type='text' placeholder='search' value={filterText}/>
+        <input type='text' placeholder='search' value={filterText} onChange={this.handleFilterTextChange} />
         <p>
-          <input type='checkbox' checked={inStockOnly} />{' '}
+          <input type='checkbox' checked={inStockOnly} onChange={this.handleInStockChange} />{' '}
           Only show products in stock
         </p>
       </form>
@@ -107,14 +121,39 @@ class FilterableProductTable extends React.Component {
       filterText: '',
       inStockOnly: false
     }
+
+    this.handleFilterTextChange = this.handleFilterTextChange.bind(this);
+    this.handleInStockChange = this.handleInStockChange.bind(this);
   }
+
+  handleFilterTextChange(filterText) {
+    this.setState({
+      filterText: filterText
+    });
+  }
+  
+  handleInStockChange(inStockOnly) {
+    this.setState({
+      inStockOnly: inStockOnly
+    })
+  }
+
   render = () => {
     const { products } = this.props;
     return (
       <>
         <Clock />
-        <SearchBar filterText={this.state.filterText} inStockOnly={this.state.inStockOnly} />
-        <ProductTable products={products} filterText={this.state.filterText} inStockOnly={this.state.inStockOnly} />
+        <SearchBar 
+          filterText={this.state.filterText}
+          inStockOnly={this.state.inStockOnly}
+          onFilterTextChange={this.handleFilterTextChange}
+          onInStockChange={this.handleInStockChange}
+        />
+        <ProductTable 
+          products={products} 
+          filterText={this.state.filterText}
+          inStockOnly={this.state.inStockOnly}
+        />
       </>
     );
   }
