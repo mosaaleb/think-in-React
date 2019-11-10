@@ -17,7 +17,7 @@ class ProductCategoryRow extends React.Component {
     const { product } = this.props;
     return (
       <tr>
-        <th colSpan='2'>{product.category}</th>
+        <th>{product.category}</th>
       </tr>
     );
   }
@@ -26,19 +26,19 @@ class ProductCategoryRow extends React.Component {
 class ProductTable extends React.Component {
   render = () => {
     const { filterText, inStockOnly, products } = this.props;
-    let lastCategory = null;
     const rows = [];
+    let lastCategory = null;
     products.forEach((product) => {
-      if (product.category !== lastCategory) {
-        rows.push(
-          <ProductCategoryRow product={product} key={product.category} />
-        );
-      }
       if (product.name.indexOf(filterText) === -1) {
         return;
       }
       if (inStockOnly && !product.stocked) {
         return;
+      }
+      if (product.category !== lastCategory) {
+        rows.push(
+          <ProductCategoryRow product={product} key={product.category} />
+        );
       }
       rows.push(
         <ProductRow product={product} key={product.name} />
